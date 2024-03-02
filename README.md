@@ -1,2 +1,2 @@
-# cocktailwind-by-aron
-An experimentation with React.
+# cocktailwind
+An experimentation with React and thecocktaildb API.
