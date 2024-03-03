@@ -58,7 +58,7 @@ interface Cocktail {
 function CocktailCard(props: CocktailCardProps) {
   return (
     <div
-      className="flex h-[80px] max-w-[250px] flex-grow gap-2 overflow-clip rounded-md shadow-lg shadow-amber-900/20"
+      className="flex h-[80px] max-w-[250px] flex-grow gap-2 overflow-clip rounded-md shadow-lg shadow-amber-900/10"
       style={{ backgroundColor: props.bgColor }}
     >
       <div className="ml-3 mr-8 flex flex-grow items-center font-merriweather text-sm text-amber-950">

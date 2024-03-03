@@ -57,18 +57,29 @@ interface Cocktail {
 function App() {
   const [cocktails, setCocktails] = useState<Cocktail[]>();
   const bgColors = [
-    "rgba(254, 190, 84, 0.4)", // "#FEBE54"
-    "rgba(254, 166, 88, 0.4)", // "#FEA658"
-    "rgba(220, 229, 148, 0.4)", // "#DCE594"
-    "rgba(240, 224, 114, 0.4)", // "#F0E072"
-    "rgba(235, 165, 168, 0.4)", // "#C0808F"
-    "rgba(240, 194, 41, 0.4)", // "#F0C229"
+    "#FEBE54",
+    "#FEA658",
+    "#DCE594",
+    "#F0E072",
+    "#C0808F",
+    "#F0C229",
   ];
 
   const getRandomColor = () => {
     const randomIndex = Math.floor(Math.random() * bgColors.length);
     return bgColors[randomIndex];
   };
+
+  function addTransparencyToHexColor(
+    hexColor: string,
+    opacityPercent: number,
+  ): string {
+    if (hexColor.length !== 7 || hexColor[0] !== "#") {
+      throw new Error("Invalid hex color format");
+    }
+
+    return `${hexColor}${opacityPercent}`;
+  }
 
   const fetchCocktails = async () => {
     const response = await fetch(
@@ -91,7 +102,7 @@ function App() {
           <CocktailCard
             key={cocktail.idDrink}
             cocktail={cocktail}
-            bgColor={getRandomColor()}
+            bgColor={addTransparencyToHexColor(getRandomColor(), 40)}
           />
         ))}
       </div>
