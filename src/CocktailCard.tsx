@@ -1,6 +1,5 @@
 interface CocktailCardProps {
   cocktail: Cocktail;
-  bgColor: string;
 }
 
 interface Cocktail {
@@ -57,19 +56,16 @@ interface Cocktail {
 
 function CocktailCard(props: CocktailCardProps) {
   return (
-    <div
-      className="flex h-[80px] max-w-[250px] flex-grow gap-2 overflow-clip rounded-md shadow-lg shadow-amber-900/10"
-      style={{ backgroundColor: props.bgColor }}
-    >
-      <div className="ml-3 mr-8 flex flex-grow items-center font-merriweather text-sm text-amber-950">
-        <h1>{props.cocktail.strDrink}</h1>
-      </div>
-
+    <div className="relative flex h-[200px] w-[200px] grow-0 flex-col items-start justify-end gap-2  overflow-clip rounded-lg !bg-cover shadow-md">
       <img
         src={props.cocktail.strDrinkThumb}
         alt={props.cocktail.strDrink}
-        className="aspect-auto h-full"
+        className="absolute left-0 top-0"
       />
+
+      <div className=" flex min-h-12 w-full items-center bg-white/80 px-4 py-2 font-merriweather text-xs font-semibold text-amber-950 backdrop-blur-sm">
+        {props.cocktail.strDrink}
+      </div>
     </div>
   );
 }

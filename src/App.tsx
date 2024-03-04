@@ -56,30 +56,6 @@ interface Cocktail {
 
 function App() {
   const [cocktails, setCocktails] = useState<Cocktail[]>();
-  const bgColors = [
-    "#FEBE54",
-    "#FEA658",
-    "#DCE594",
-    "#F0E072",
-    "#C0808F",
-    "#F0C229",
-  ];
-
-  const getRandomColor = () => {
-    const randomIndex = Math.floor(Math.random() * bgColors.length);
-    return bgColors[randomIndex];
-  };
-
-  function addTransparencyToHexColor(
-    hexColor: string,
-    opacityPercent: number,
-  ): string {
-    if (hexColor.length !== 7 || hexColor[0] !== "#") {
-      throw new Error("Invalid hex color format");
-    }
-
-    return `${hexColor}${opacityPercent}`;
-  }
 
   const fetchCocktails = async () => {
     const response = await fetch(
@@ -95,15 +71,11 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-20 px-8 py-12">
-      <h1 className="font-pacifico text-3xl font-bold">Cocktails</h1>
-      <div className="flex flex-wrap justify-between gap-x-6 gap-y-8">
+    <div className="flex w-screen flex-col items-center gap-24 p-20">
+      <h1 className="font-pacifico text-4xl font-bold">Cocktails</h1>
+      <div className="flex flex-wrap justify-center gap-x-6 gap-y-8">
         {cocktails?.map((cocktail) => (
-          <CocktailCard
-            key={cocktail.idDrink}
-            cocktail={cocktail}
-            bgColor={addTransparencyToHexColor(getRandomColor(), 40)}
-          />
+          <CocktailCard key={cocktail.idDrink} cocktail={cocktail} />
         ))}
       </div>
     </div>
