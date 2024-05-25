@@ -62,6 +62,7 @@ export const App = () => {
   const [selectedCocktail, setSelectedCocktail] = useState<Cocktail | null>(
     null,
   );
+  const [ingredients, setIngredients] = useState<string[]>([]);
 
   const handleDataFromChild = () => {
     if (!selectedCocktailId) {
@@ -75,6 +76,19 @@ export const App = () => {
   useEffect(() => {
     handleDataFromChild();
   }, [selectedCocktailId]);
+
+  useEffect(() => {
+    if (selectedCocktail) {
+      const ingredients = Object.keys(selectedCocktail)
+        .filter(
+          (key) =>
+            key.startsWith("strIngredient") && (selectedCocktail as any)[key],
+        )
+        .map((key) => (selectedCocktail as any)[key]);
+
+      setIngredients(ingredients);
+    }
+  }, [selectedCocktail]);
 
   const closeModal = () => {
     setSelectedCocktail(null);
@@ -113,13 +127,21 @@ export const App = () => {
           <div className="pointer-events-none fixed inset-0 z-[999] flex items-center justify-center">
             <div className="pointer-events-auto mx-12 flex w-[800px] max-w-full flex-col overflow-clip rounded-lg bg-white">
               <div className="flex flex-row">
-                <img
-                  src={selectedCocktail.strDrinkThumb}
-                  alt={selectedCocktail.strDrink}
-                  className="h-auto w-[300px] "
-                />
-                <div className=" flex w-full flex-col gap-4 pb-12 pl-12 pr-6 pt-5">
-                  <button onClick={closeModal} className="mb-2 ml-auto">
+                <div
+                  className="relative left-0 top-0  bg-gray-400
+                 "
+                >
+                  <img
+                    className="min-h-[100%] min-w-[100%]"
+                    src={selectedCocktail.strDrinkThumb}
+                    alt={selectedCocktail.strDrink}
+                  />
+                </div>
+                <div className="relative flex w-full flex-col gap-4 p-12 ">
+                  <button
+                    onClick={closeModal}
+                    className="absolute right-5 top-5"
+                  >
                     <XCircleIcon className="h-[35px] text-black opacity-20 hover:opacity-100" />
                   </button>
                   <h1 className="font-pacifico text-2xl font-bold">
@@ -131,10 +153,10 @@ export const App = () => {
                   </div>
                   <div>
                     <div className="mb-2 font-medium">Ingredients</div>
-                    <ul className="list-disc  pl-[20px]">
-                      <li>{selectedCocktail.strIngredient1}</li>
-                      <li>{selectedCocktail.strIngredient2}</li>
-                      <li>{selectedCocktail.strIngredient3}</li>
+                    <ul className="list-disc pl-[20px]">
+                      {ingredients?.map((ingredient, index) => (
+                        <li key={index}> {ingredient}</li>
+                      ))}
                     </ul>
                   </div>
                 </div>

@@ -7,7 +7,7 @@ interface CocktailCardProps {
 
 export const CocktailCard = (props: CocktailCardProps) => {
   return (
-    <div className="group relative flex h-[200px] w-[200px] grow-0 flex-col items-start justify-end gap-2 overflow-clip  rounded-lg !bg-cover shadow-md hover:cursor-pointer">
+    <div className="group relative flex h-[200px] w-[200px] grow-0 flex-col items-start justify-end gap-2 overflow-clip rounded-lg !bg-cover shadow-md hover:cursor-pointer">
       <img
         src={props.cocktail.strDrinkThumb}
         alt={props.cocktail.strDrink}
