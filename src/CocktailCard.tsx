@@ -8,7 +8,7 @@ interface CocktailCardProps {
 function CocktailCard(props: CocktailCardProps) {
   return (
     <div
-      className="relative flex h-[200px] w-[200px] grow-0 flex-col items-start justify-end gap-2  overflow-clip rounded-lg !bg-cover shadow-md"
+      className="relative flex h-[200px] w-[200px] grow-0 flex-col items-start justify-end gap-2 overflow-clip  rounded-lg !bg-cover shadow-md hover:cursor-pointer"
       onClick={() => props.sendDataToParent(props.cocktail.idDrink)}
     >
       <img

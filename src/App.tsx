@@ -54,17 +54,15 @@ export interface Cocktail {
   dateModified?: string;
 }
 
-function App() {
+export const App = () => {
   const [cocktails, setCocktails] = useState<Cocktail[]>();
   const [selectedCocktail, setSelectedCocktail] = useState<Cocktail | null>(
     null,
   );
 
-  const handleDataFromChild = (cocktailId: number) => {
-    const selectedCocktail = cocktails?.find(
-      (cocktail) => cocktail.idDrink === cocktailId,
-    );
-    setSelectedCocktail(selectedCocktail || null);
+  const handleDataFromChild = async (cocktailId: number) => {
+    const selectedCocktail = await fetchCocktail(cocktailId);
+    setSelectedCocktail(selectedCocktail);
   };
 
   const closeModal = () => {
@@ -76,8 +74,15 @@ function App() {
       `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail`,
     );
     const fetchedCocktails = await response.json();
-    console.log(fetchedCocktails.drinks);
     setCocktails(fetchedCocktails.drinks);
+  };
+
+  const fetchCocktail = async (cocktailId: number) => {
+    const response = await fetch(
+      `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${cocktailId}`,
+    );
+    const fetchedCocktail = await response.json();
+    return fetchedCocktail.drinks[0] as Cocktail;
   };
 
   useEffect(() => {
@@ -85,30 +90,62 @@ function App() {
   }, []);
 
   return (
-    <div className="flex w-screen flex-col items-center gap-24 p-20">
+    <div className=" flex w-screen flex-col items-center p-20">
       {selectedCocktail && (
-        <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="flex h-[200px] w-[200px] flex-col bg-white">
-            {selectedCocktail.strDrink}
-            <button onClick={closeModal} className="bg-red-200">
-              Close
-            </button>
+        <section>
+          <div
+            onClick={closeModal}
+            className="fixed inset-0 z-50   cursor-pointer  bg-black/50 backdrop-blur-sm"
+          ></div>
+
+          <div className="pointer-events-none fixed inset-0 z-[999] flex items-center justify-center ">
+            <div className="pointer-events-auto flex w-[600px] flex-col overflow-clip rounded-lg bg-white">
+              <div className="flex flex-row">
+                <img
+                  src={selectedCocktail.strDrinkThumb}
+                  alt={selectedCocktail.strDrink}
+                  className="h-auto w-[300px] "
+                />
+                <div className=" flex w-full flex-col gap-4 pb-12 pl-12 pr-6 pt-5">
+                  <button
+                    onClick={closeModal}
+                    className="mb-2 ml-auto aspect-square rounded-full p-2 transition-all duration-[20ms] hover:bg-black/20"
+                  >
+                    X
+                  </button>
+                  <h1 className="font-pacifico text-2xl font-bold">
+                    {selectedCocktail.strDrink}
+                  </h1>
+                  <div>
+                    <div className="mb-2 font-medium">Glass</div>
+                    <div>{selectedCocktail.strGlass}</div>
+                  </div>
+                  <div>
+                    <div className="mb-2 font-medium">Ingredients</div>
+                    <ul className="list-disc  pl-[20px]">
+                      <li>{selectedCocktail.strIngredient1}</li>
+                      <li>{selectedCocktail.strIngredient2}</li>
+                      <li>{selectedCocktail.strIngredient3}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
       )}
 
-      <h1 className="font-pacifico text-4xl font-bold">Cocktails</h1>
+      <h1 className="mb-24 font-pacifico text-4xl font-bold">Cocktails</h1>
       <div className="flex flex-wrap justify-center gap-x-6 gap-y-8">
         {cocktails?.map((cocktail) => (
           <CocktailCard
             key={cocktail.idDrink}
             cocktail={cocktail}
-            sendDataToParent={handleDataFromChild} // TODO: DELETE THIS LINE AND INSTEAD onClick=handleDataFromChild(cocktail.idDrink)
+            sendDataToParent={handleDataFromChild}
+            // TODO: DELETE THIS LINE AND INSTEAD onClick=handleDataFromChild(cocktail.idDrink)
           />
         ))}
       </div>
     </div>
   );
-}
-
-export default App;
+};
