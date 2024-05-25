@@ -1,5 +1,7 @@
 import "./App.css";
-import CocktailCard from "./CocktailCard";
+import { CocktailCard } from "./CocktailCard";
+import { XCircleIcon } from "@heroicons/react/24/solid";
+
 import { useEffect, useState } from "react";
 
 export interface Cocktail {
@@ -56,17 +58,27 @@ export interface Cocktail {
 
 export const App = () => {
   const [cocktails, setCocktails] = useState<Cocktail[]>();
+  const [selectedCocktailId, setSelectedCocktailId] = useState<number | null>();
   const [selectedCocktail, setSelectedCocktail] = useState<Cocktail | null>(
     null,
   );
 
-  const handleDataFromChild = async (cocktailId: number) => {
-    const selectedCocktail = await fetchCocktail(cocktailId);
-    setSelectedCocktail(selectedCocktail);
+  const handleDataFromChild = () => {
+    if (!selectedCocktailId) {
+      return;
+    }
+    fetchCocktail(selectedCocktailId).then((response) =>
+      setSelectedCocktail(response),
+    );
   };
+
+  useEffect(() => {
+    handleDataFromChild();
+  }, [selectedCocktailId]);
 
   const closeModal = () => {
     setSelectedCocktail(null);
+    setSelectedCocktailId(null);
   };
 
   const fetchCocktails = async () => {
@@ -90,16 +102,16 @@ export const App = () => {
   }, []);
 
   return (
-    <div className=" flex w-screen flex-col items-center p-20">
+    <div className="mx-auto flex w-screen max-w-screen-2xl flex-col items-center  p-20">
       {selectedCocktail && (
         <section>
           <div
             onClick={closeModal}
-            className="fixed inset-0 z-50   cursor-pointer  bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-50 cursor-pointer bg-black/50 backdrop-blur-sm"
           ></div>
 
-          <div className="pointer-events-none fixed inset-0 z-[999] flex items-center justify-center ">
-            <div className="pointer-events-auto flex w-[600px] flex-col overflow-clip rounded-lg bg-white">
+          <div className="pointer-events-none fixed inset-0 z-[999] flex items-center justify-center">
+            <div className="pointer-events-auto mx-12 flex w-[800px] max-w-full flex-col overflow-clip rounded-lg bg-white">
               <div className="flex flex-row">
                 <img
                   src={selectedCocktail.strDrinkThumb}
@@ -107,11 +119,8 @@ export const App = () => {
                   className="h-auto w-[300px] "
                 />
                 <div className=" flex w-full flex-col gap-4 pb-12 pl-12 pr-6 pt-5">
-                  <button
-                    onClick={closeModal}
-                    className="mb-2 ml-auto aspect-square rounded-full p-2 transition-all duration-[20ms] hover:bg-black/20"
-                  >
-                    X
+                  <button onClick={closeModal} className="mb-2 ml-auto">
+                    <XCircleIcon className="h-[35px] text-black opacity-20 hover:opacity-100" />
                   </button>
                   <h1 className="font-pacifico text-2xl font-bold">
                     {selectedCocktail.strDrink}
@@ -136,14 +145,14 @@ export const App = () => {
       )}
 
       <h1 className="mb-24 font-pacifico text-4xl font-bold">Cocktails</h1>
-      <div className="flex flex-wrap justify-center gap-x-6 gap-y-8">
+      <div className="flex flex-wrap justify-center gap-x-3 gap-y-2">
         {cocktails?.map((cocktail) => (
-          <CocktailCard
+          <div
             key={cocktail.idDrink}
-            cocktail={cocktail}
-            sendDataToParent={handleDataFromChild}
-            // TODO: DELETE THIS LINE AND INSTEAD onClick=handleDataFromChild(cocktail.idDrink)
-          />
+            onClick={() => setSelectedCocktailId(cocktail.idDrink)}
+          >
+            <CocktailCard cocktail={cocktail} />
+          </div>
         ))}
       </div>
     </div>
