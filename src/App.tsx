@@ -67,7 +67,7 @@ export const App = () => {
     "Pouring",
   ];
 
-  const { data: cocktails } = useQuery({
+  const { data: cocktails, isLoading: isLoadingCocktails } = useQuery({
     queryKey: ["cocktails"],
     queryFn: fetchCocktails,
   });
@@ -172,14 +172,18 @@ export const App = () => {
 
       <h1 className="mb-24 font-pacifico text-4xl font-bold">Cocktails</h1>
       <div className="flex flex-wrap justify-center gap-x-3 gap-y-2">
-        {cocktails?.map((cocktail) => (
-          <div
-            key={cocktail.idDrink}
-            onClick={() => setSelectedCocktailId(cocktail.idDrink)}
-          >
-            <CocktailCard cocktail={cocktail} />
-          </div>
-        ))}
+        {isLoadingCocktails ? (
+          <div className="animate-pulse">Loading cocktails...</div>
+        ) : (
+          cocktails?.map((cocktail) => (
+            <div
+              key={cocktail.idDrink}
+              onClick={() => setSelectedCocktailId(cocktail.idDrink)}
+            >
+              <CocktailCard cocktail={cocktail} />
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
