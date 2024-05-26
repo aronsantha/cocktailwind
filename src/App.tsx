@@ -59,17 +59,6 @@ export interface Cocktail {
 export const App = () => {
   const [selectedCocktailId, setSelectedCocktailId] = useState<number | null>();
   const [ingredients, setIngredients] = useState<string[]>([]);
-
-  const { data: cocktails } = useQuery({
-    queryKey: ["cocktails"],
-    queryFn: () =>
-      fetch(
-        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail`,
-      ).then((response) =>
-        response.json().then((data) => (data.drinks as Cocktail[]) || []),
-      ),
-  });
-
   const cocktailBuildingMethods: string[] = [
     "Building",
     "Shaking",
@@ -78,16 +67,32 @@ export const App = () => {
     "Pouring",
   ];
 
+  const { data: cocktails } = useQuery({
+    queryKey: ["cocktails"],
+    queryFn: fetchCocktails,
+  });
+
   const { data: selectedCocktail, isLoading: isLoadingCocktail } = useQuery({
     queryKey: ["selectedCocktail", selectedCocktailId],
-    queryFn: () =>
-      fetch(
-        `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${selectedCocktailId}`,
-      ).then((response) =>
-        response.json().then((data) => data.drinks[0] as Cocktail),
-      ),
+    queryFn: fetchSelectedCocktail,
     enabled: !!selectedCocktailId,
   });
+
+  function fetchCocktails() {
+    return fetch(
+      "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail",
+    )
+      .then((response) => response.json())
+      .then((data) => (data.drinks as Cocktail[]) || []);
+  }
+
+  function fetchSelectedCocktail() {
+    return fetch(
+      `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${selectedCocktailId}`,
+    )
+      .then((response) => response.json())
+      .then((data) => data.drinks[0] as Cocktail);
+  }
 
   useEffect(() => {
     if (selectedCocktail) {
