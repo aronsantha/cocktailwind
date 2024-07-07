@@ -1,4 +1,4 @@
-import { Cocktail } from "./App";
+import { Cocktail } from "../App";
 import { ArrowRightCircleIcon } from "@heroicons/react/24/solid";
 
 interface CocktailCardProps {
@@ -15,7 +15,7 @@ export const CocktailCard = (props: CocktailCardProps) => {
       />
 
       <div className="relative flex h-12 w-full flex-col justify-start px-4 py-4 font-merriweather text-xs font-semibold text-white backdrop-blur-xl transition-all group-hover:h-full group-hover:justify-between">
-        <p className="text-shadow-sm shrink-0 truncate group-hover:text-wrap">
+        <p className="shrink-0 truncate text-shadow-sm group-hover:text-wrap">
           {props.cocktail.strDrink}
         </p>
         <ArrowRightCircleIcon className="absolute left-[50%] top-[50%] hidden w-[50px] translate-x-[-50%] translate-y-[-50%] text-white group-hover:block " />
